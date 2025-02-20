@@ -1,4 +1,4 @@
-## Project2 2/20/25 3DGameEngineConcepts
+## Project3 2/20/25 3DGameEngineConcepts
 ## Comments on column 81, 
 ## All file names and folder names are capitalized (Assets/Planets/Textures/WhitePlanet.png)
 
@@ -6,7 +6,7 @@ import math, sys, random
 from direct.showbase.ShowBase import ShowBase 
 import DefensePaths as defensePaths
 import SpaceJamClasses as spaceJamClasses
-from direct.task import Task
+#from direct.task import Task
 
 class MyApp(ShowBase):
     def __init__(self): ## Constructor
@@ -74,7 +74,7 @@ class MyApp(ShowBase):
     def setCamera(self):
         self.disable_mouse()
         self.camera.reparentTo(self.player.modelNode)
-        self.camera.setFluidPos(0, 1, 0)
+        self.camera.setFluidPos(-50, 0, 0)
 
     def quit(self):
         sys.exit()

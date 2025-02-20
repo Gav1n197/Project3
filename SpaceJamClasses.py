@@ -1,5 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import *
+from direct.task import Task
 
 class Player(ShowBase):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float, Hpr: Vec3):
@@ -16,26 +17,29 @@ class Player(ShowBase):
 
     def thrust(self, keyDown):
         if keyDown:
-            self.task_mgr.add(self.applyThrust, 'forward-thrust') # might be taskManager instead
+            self.taskMgr.add(self.applyThrust, 'forward-thrust') # might be taskManager instead, taskMgr is whats on the website
         else:
-            self.task_mgr.remove('forward-thrust')
+            self.taskMgr.remove('forward-thrust')
 
     def applyThrust(self, task):
         rate = 5
         trajectory = self.render.getRelativeVector(self.modelNode, Vec3.forward())
         trajectory.normalize()
         self.modelNode.setFluidPos(self.modelNode.getPos() + trajectory * rate)
-        return Task.cont                                    # Continue moving the players ship
+        return task.cont                                    # Continue moving the players ship when returning
     
-    def setKeyBindings(self): ##Movement for the player
+    def setKeyBindings(self): ##Movement for the player, review Warmup3
         self.accept('space', self.thrust, [1])
         self.accept('space-up', self.thrust, [0])
 
+        self.accept('a', self.leftTurn, [1])
+        self.accept('a-up', self.leftTurn, [0])
+
     def leftTurn(self, keyDown):
         if keyDown:
-            self.task_mgr.add(self.applyLeftTurn, 'left-turn')
+            self.taskMgr.add(self.applyLeftTurn, 'left-turn')
         else:
-            self.task_mgr.remove('left-turn')
+            self.taskMgr.remove('left-turn')
 
     def applyLeftTurn(self, task):
         rate = 0.5
