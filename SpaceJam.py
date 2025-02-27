@@ -1,19 +1,33 @@
-## Project3 2/20/25 3DGameEngineConcepts
-## Comments on column 81, 
+## Project3 2/27/25 3DGameEngineConcepts
+## Comments on column 73
 ## All file names and folder names are capitalized (Assets/Planets/Textures/WhitePlanet.png)
 
 import math, sys, random
 from direct.showbase.ShowBase import ShowBase 
-import DefensePaths as defensePaths
-import SpaceJamClasses as spaceJamClasses
+import DefensePaths as defensePaths # type: ignore
+import SpaceJamClasses as spaceJamClasses # type: ignore
 #from direct.task import Task
+from panda3d.core import CollisionTraverser, CollisionHandlerPusher
+
+from panda3d.core import CollisionTraverser                             # Imports traverser to cycle through each object to check collision
+from panda3d.core import CollisionHandlerPusher                         # Imports basic physical interaction 
 
 class MyApp(ShowBase):
     def __init__(self): ## Constructor
         ShowBase.__init__(self)
+
+        self.cTrav = CollisionTraverser()                               # Collision setup
+        self.cTrav.traverse(self.render)
+        self.pusher = CollisionHandlerPusher()
+
+
         self.accept('escape', self.quit)  ## Esc to escape
         self.setupScene()
         self.setCamera()
+
+        #self.pusher.addCollider(self.player.collisionNode, self.player.modelNode)
+        #self.cTrav.addCollider(self.player.collisionNode, self.pusher)
+        #self.cTrav.showCollisions(self.render)
         
         fullCycle = 60
         for i in range(fullCycle):
@@ -37,7 +51,7 @@ class MyApp(ShowBase):
         self.planet5 = spaceJamClasses.Planet(self.loader, "Assets/Planets/protoPlanet.x", self.render, "planet5", "Assets/Planets/Textures/Venus.jpg",         ( 3000, -6000, 230),  350)
         self.planet6 = spaceJamClasses.Planet(self.loader, "Assets/Planets/protoPlanet.x", self.render, "planet6", "Assets/Planets/Textures/GreyPlanet.jpg",    (-3000, -6000, 730),  250) 
 
-        self.player = spaceJamClasses.Player(self.loader, "Assets/Spaceships/Dumbledore/Dumbledore.x", self.render, "player", (0, 0, 0), 1, (0, 93, 0))
+        self.player = spaceJamClasses.Player(self.loader, self.taskMgr, "Assets/Spaceships/Dumbledore/Dumbledore.x", self.render, "player", (0, 0, 0), 1, (0, 0, 0))
         
         self.SpaceStation1 = spaceJamClasses.SpaceStation(self.loader, "Assets/SpaceStation/SpaceStation1B/spaceStation.x", self.render, "spaceStation1", "Assets/Planets/Textures/Mercury.jpg", (40, 50, 23), 1) 
 
@@ -74,7 +88,7 @@ class MyApp(ShowBase):
     def setCamera(self):
         self.disable_mouse()
         self.camera.reparentTo(self.player.modelNode)
-        self.camera.setFluidPos(-50, 0, 0)
+        self.camera.setFluidPos(0, 0, 0)
 
     def quit(self):
         sys.exit()
