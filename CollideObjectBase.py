@@ -21,7 +21,7 @@ class InverseSphereCollideObject(CollidableObject):
         super(InverseSphereCollideObject, self).__init__(loader, modelPath, parentNode, nodeName)
         self.collisionNode.node().addSolid(CollisionInvSphere(colPositionVec, colRadius))
         
-        self.collisionNode.show()
+        #self.collisionNode.show()
 
 class CapsuleCollidableObject(CollidableObject):
     # a and b represent the furthest points away on each side of the capsule
@@ -31,4 +31,9 @@ class CapsuleCollidableObject(CollidableObject):
         
         self.collisionNode.show()
 
-#class SphereCollideObject(CollidableObject):
+class SphereCollidableObject(CollidableObject):
+    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, x: float, y: float, z: float, r: float):
+        super(SphereCollidableObject, self).__init__(loader, modelPath, parentNode, nodeName)
+        self.collisionNode.node().addSolid(CollisionSphere(x, y, z, r))
+
+        self.collisionNode.show()

@@ -5,16 +5,19 @@ from direct.task.Task import TaskManager
 from typing import Callable
 from panda3d.core import Loader, NodePath, Vec3
 
-from CollideObjectBase import InverseSphereCollideObject, CapsuleCollidableObject # type: ignore
-    # Will need to import SphereCollideObject here later
+from CollideObjectBase import InverseSphereCollideObject, CapsuleCollidableObject, SphereCollidableObject # type: ignore
 
-class Player(ShowBase):
-    def __init__(self, loader: Loader, taskMgr: TaskManager, modelPath: str, parentNode: NodePath, nodeName: str, posVec: Vec3, scaleVec: float, Hpr: Vec3):
+class Player(SphereCollidableObject):
+    def __init__(self, loader: Loader, taskMgr: TaskManager, accept: Callable[[str, Callable], None], modelPath: str, parentNode: NodePath, nodeName: str, x: float, y: float, z: float, scaleVec: float, Hpr: Vec3):
+        super(Player, self).__init__(loader, modelPath, parentNode, nodeName, x, y, z, 10) ##Uses __init__ function from SphereCollideObject
         self.taskMgr = taskMgr
+        self.accept = accept
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
-        self.modelNode.setPos(posVec)
+        self.modelNode.setX(x)
+        self.modelNode.setY(y)
+        self.modelNode.setZ(z)
         self.modelNode.setScale(scaleVec)
 
         self.modelNode.setName(nodeName)
@@ -72,14 +75,14 @@ class Player(ShowBase):
 
 
     def applyLeftRoll(self, task):
-        rate = 0.5
-        print('leftroll')
+        rate = 1
+        #print('leftroll')
         self.modelNode.setR(self.modelNode.getR() - rate)
         return task.cont
         
     def applyRightRoll(self, task):
-        rate = 0.5
-        print('rightroll')
+        rate = 1
+        #print('rightroll')
         self.modelNode.setR(self.modelNode.getR() + rate)
         return task.cont
     
@@ -99,14 +102,14 @@ class Player(ShowBase):
 
 
     def applyLeftTurn(self, task):
-        rate = 0.5
-        print('leftturn')
+        rate = 1
+        #print('leftturn')
         self.modelNode.setH(self.modelNode.getH() + rate)
         return task.cont
 
     def applyRightTurn(self, task):
-        rate = 0.5
-        print('rightturn')
+        rate = 1
+        #print('rightturn')
         self.modelNode.setH(self.modelNode.getH() - rate)
         return task.cont
     
@@ -126,21 +129,21 @@ class Player(ShowBase):
 
 
     def applyUp(self, task):
-        rate = 0.5
-        print('applyUp')
+        rate = 1
+        #print('applyUp')
         self.modelNode.setP(self.modelNode.getP() + rate)
         return task.cont
 
     def applyDown(self, task):
-        rate = 0.5
-        print('applyDown')
+        rate = 1
+        #print('applyDown')
         self.modelNode.setP(self.modelNode.getP() - rate)
         return task.cont
 
 
 class Universe(InverseSphereCollideObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
-        super(Universe, self).__init__(loader, modelPath, parentNode, nodeName, Vec3(0,0,0), 0.9) ##Uses __init__ function from InverseSphereCollideObject
+        super(Universe, self).__init__(loader, modelPath, parentNode, nodeName, posVec, 9900) ##Uses __init__ function from InverseSphereCollideObject
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
@@ -154,7 +157,7 @@ class Universe(InverseSphereCollideObject):
 
 class SpaceStation(CapsuleCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
-        super(SpaceStation, self).__init__(loader, modelPath, parentNode, nodeName, 1, -1, 5, 1, -1, -5, 10) ##Defines ax, ay, az, etc.
+        super(SpaceStation, self).__init__(loader, modelPath, parentNode, nodeName, 1, -1, 5, 1, -1, -5, 7)     ##Defines ax, ay, az, etc.
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
@@ -166,13 +169,15 @@ class SpaceStation(CapsuleCollidableObject):
         tex = loader.loadTexture(texPath)
         self.modelNode.setTexture(tex, 1)
 
-class Planet(ShowBase):
-    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float):
-
+class Planet(SphereCollidableObject):
+    def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, x: float, y: float, z: float, scaleVec: float):
+        super(Planet, self).__init__(loader, modelPath, parentNode, nodeName, x, y, z, scaleVec)
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
-        self.modelNode.setPos(posVec)
+        self.modelNode.setX(x)
+        self.modelNode.setY(y)
+        self.modelNode.setZ(z)
         self.modelNode.setScale(scaleVec)
 
         self.modelNode.setName(nodeName)
@@ -180,9 +185,9 @@ class Planet(ShowBase):
         tex = loader.loadTexture(texPath)
         self.modelNode.setTexture(tex, 1)
 
-class Drone(ShowBase):
+class Drone(SphereCollidableObject):
     def __init__(self, loader: Loader, modelPath: str, parentNode: NodePath, nodeName: str, texPath: str, posVec: Vec3, scaleVec: float): # type: ignore
-
+        super(Drone, self).__init__(loader, modelPath, parentNode, nodeName, posVec.getX(), posVec.getY(), posVec.getZ(), scaleVec)
         self.modelNode = loader.loadModel(modelPath)
         self.modelNode.reparentTo(parentNode)
 
