@@ -64,7 +64,7 @@ class MyApp(ShowBase):
     def DrawCloudDefense(self, centralObject, droneName):
         unitVec = defensePaths.Cloud()
         unitVec.normalize()
-        position = unitVec * 200 + centralObject.modelNode.getPos()
+        position = unitVec * 400 + centralObject.modelNode.getPos()
         spaceJamClasses.Drone(self.loader, "Assets/DroneDefender/DroneDefender.obj", self.render, droneName, "Assets/DroneDefender/octotoad1_auv.png", position, 10)
     
     def drawCircleX(self, centralObject, droneName, step, fullCircle, radius):

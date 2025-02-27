@@ -1,7 +1,7 @@
 import math, random
 from panda3d.core import *
 
-def Cloud(radius = 1):
+def Cloud(radius = 400):
     x = 2 * random.random() - 1
     y = 2 * random.random() - 1
     z = 2 * random.random() - 1
